@@ -1,0 +1,15 @@
+<h2>Ingredients</h2>
+	{{#each inStock}}
+		<form id={{this._id}} action="editIngredient" method="POST">
+			{{this.name}}: ${{this.price}}
+			<input type="button" class="edit" value="Edit">
+			<input type="submit" class="submit" value="In Stock">
+		</form>
+	{{/each}}
+
+<h3>New Ingredient</h3>
+	<form id="newIngredient" action="newIngredient" method="POST">
+		Name: <input type="text" id="name">
+		Cost: $<input type="text" id="cost">
+		<input type="submit" class="submit" value="Add">
+	</form>
