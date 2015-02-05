@@ -1,15 +1,20 @@
 <h2>Ingredients</h2>
-	{{#each inStock}}
-		<form id={{this._id}} action="editIngredient" method="POST">
-			{{this.name}}: ${{this.price}}
-			<input type="button" class="edit" value="Edit">
-			<input type="submit" class="submit" value="In Stock">
-		</form>
-	{{/each}}
-
+<div id="list">
+    {{#each ingredients}}
+        <form id={{this._id}} class="toggleIngredient" action="toggleIngredient" method="POST">
+            <span> {{this.name}}: ${{this.cost}} </span>
+            <input type="button" class="edit" value="Edit">
+            {{#if this.stock}}
+                <input type="submit" value="In Stock" class="toggle">
+            {{else}}
+                <input type="submit" value="Out of Stock" class="toggle">
+            {{/if}}
+        </form>
+    {{/each}}
+</div>
 <h3>New Ingredient</h3>
-	<form id="newIngredient" action="newIngredient" method="POST">
-		Name: <input type="text" id="name">
-		Cost: $<input type="text" id="cost">
-		<input type="submit" class="submit" value="Add">
-	</form>
+    <form id="newIngredient" action="newIngredient" method="POST">
+        Name: <input type="text" name="name"/>
+        Cost: $<input type="text" name="cost"/>
+        <input type="submit" value="Add"/>
+    </form>

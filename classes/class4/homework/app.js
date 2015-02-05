@@ -1,43 +1,49 @@
-/* REQUIRES */
-// ...npm
-var path = require('path');
+// Utility Imports
 var express = require('express');
-var exphbs = require('express-handlebars');
 var mongoose = require('mongoose');
-var bodyParser = require('body-parser');
-var cookieParser = require('cookie-parser');
+var path = require('path');
 var logger = require('morgan');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var hbs = require('express-handlebars');
 
-// ...local
-var index = require('./routes/index.js');
+// Route Imports
+var base = require('./routes/base');
 
-
-/* CONNECT TO MONGOOSE */
-mongoose.connect(process.env.MONGOURI || 'mongodb://localhost/restaurant');
-
-
-/* CONFIG APP */
+// Config
 var app = express();
-app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+var mongoURI = process.env.MONGOURI || "mongodb://localhost/restaurant";
+var PORT = process.env.PORT || 3000;
+mongoose.connect(mongoURI);
+app.engine('handlebars', hbs({
+    defaultLayout: 'base',
+    partialsDir: __dirname + '/views/partials',
+    layoutsDir: __dirname + '/views/layouts'
+}));
+app.set('views', __dirname + '/views');
 app.set('view engine', 'handlebars');
 
+// Middleware
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+    extended: false
+}));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, "public")));
 
-/* ROUTING */
-app.get('/', index.home);
-app.get('/ingredients', index.ingredients);
-app.get('/order', index.makeOrder);
-app.get('/kitchen', index.kitchen);
+// Routing Table
+app.get('/', base.home);
+// Get Requests
+app.get('/ingredients', base.ingredients);
+app.get('/order', base.order);
+app.get('/kitchen', base.kitchen);
+// Post Requests
+app.post('/newIngredient', base.newIngredient);
+app.post('/addOrder', base.addOrder);
+app.post('/editIngredient', base.editIngredient);
+app.post('/toggleIngredient', base.toggleIngredient);
+app.post('/doneOrder', base.doneOrder);
 
-app.post('/outStock', index.outStock);
-app.post('/inStock', index.inStock);
-app.post('/addOrder', index.addOrder);
-app.post('/deleteOrder', index.deleteOrder);
-app.post('/editIngredient', index.editIngredient);
-app.post('/newIngredient', index.newIngredient);
-
-app.listen(process.env.PORT || 3000);
+// Listen
+app.listen(PORT);
