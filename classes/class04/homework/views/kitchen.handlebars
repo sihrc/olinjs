@@ -1,0 +1,8 @@
+<h2>Pending Orders</h2>
+    {{#each orders}}
+        <form id={{this._id}} class="order" action="doneOrder" method="POST">
+            <span> Name: {{this.name}} - Total Cost: ${{this.totalCost}} </span><br>
+            <span> Ingredients: {{this.ingredientStr}} </span>
+            <input type="submit" value="Done">
+        </form>
+    {{/each}}
